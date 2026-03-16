@@ -1,16 +1,23 @@
 #pragma once
 
 #include <string>
+#include <iostream>
+
+using namespace std;
 
 class Exception {
-
+public: 
+	virtual string getMessage() ;
 };
 
-class LexicalException : public Exception {
+class SyntaxException : public Exception {
 public:
-	LexicalException(int pos, string line);
+	SyntaxException(int pos, string line);
+
+	virtual string getMessage() override;
 
 private:
 	int position;
 	string line;
 };
+
