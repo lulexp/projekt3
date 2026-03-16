@@ -14,6 +14,8 @@ using namespace std;
 struct Token {
 	string parameter;
 	bool inQuotes;
+	int start;
+	int end;
 };
 
 struct IOdata {
@@ -52,9 +54,9 @@ private:
 
 	vector<vector<Token>> getSegments(vector<Token> tokens);
 
-	Command* parseZero(vector<Token> segment);
+	Command* parseZero(vector<Token> segment, string line);
 
-	Command* parseUnary(vector<Token> segment);
+	Command* parseUnary(vector<Token> segment, string line);
 
 	Command* parseBinary(vector<Token> segment);
 
