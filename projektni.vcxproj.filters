@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Abstract Concepts">
+      <UniqueIdentifier>{52153c54-450a-4d28-9e3f-53cfe309bf67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Abstract Concepts">
+      <UniqueIdentifier>{507097ba-ba90-47be-83a3-a00a6624abcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Practical Commands">
+      <UniqueIdentifier>{8bb3fc50-ab71-4e56-a487-0f2ea0c6c6ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Practical Commands">
+      <UniqueIdentifier>{55f003ec-9fcb-49a9-8f4c-7815296fde6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Practical Concepts">
+      <UniqueIdentifier>{2a16e24a-a125-4a92-a005-efc219ee3567}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Practical Concepts">
+      <UniqueIdentifier>{20e34f0a-2d45-4c99-8306-d5aa6df17a9d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="projektni.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.h">
+      <Filter>Header Files\Abstract Concepts</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory.cpp">
+      <Filter>Source Files\Abstract Concepts</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>Source Files\Abstract Concepts</Filter>
+    </ClCompile>
+    <ClCompile Include="UnaryCommand.cpp">
+      <Filter>Source Files\Abstract Concepts</Filter>
+    </ClCompile>
+    <ClCompile Include="Echo.cpp">
+      <Filter>Source Files\Practical Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Reader.cpp">
+      <Filter>Source Files\Practical Concepts</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser.txt">
+      <Filter>Source Files\Practical Concepts</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryCommand.cpp">
+      <Filter>Source Files\Abstract Concepts</Filter>
+    </ClCompile>
+    <ClCompile Include="Prompt.cpp">
+      <Filter>Source Files\Practical Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Source Files\Practical Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Date.cpp">
+      <Filter>Source Files\Practical Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Touch.cpp">
+      <Filter>Source Files\Practical Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Truncate.cpp">
+      <Filter>Source Files\Practical Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Remove.cpp">
+      <Filter>Source Files\Practical Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="CountWC.cpp">
+      <Filter>Source Files\Practical Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Tr.cpp">
+      <Filter>Source Files\Practical Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="TernaryCommand.cpp">
+      <Filter>Source Files\Abstract Concepts</Filter>
+    </ClCompile>
+    <ClCompile Include="Head.cpp">
+      <Filter>Source Files\Practical Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Batch.cpp">
+      <Filter>Source Files\Practical Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="NewParser.h">
+      <Filter>Header Files\Practical Concepts</Filter>
+    </ClCompile>
+    <ClCompile Include="NewParser.cpp">
+      <Filter>Source Files\Practical Concepts</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpreter.cpp">
+      <Filter>Source Files\Practical Concepts</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Memory.h">
+      <Filter>Header Files\Abstract Concepts</Filter>
+    </ClInclude>
+    <ClInclude Include="UnaryCommand.h">
+      <Filter>Header Files\Abstract Concepts</Filter>
+    </ClInclude>
+    <ClInclude Include="Echo.h">
+      <Filter>Header Files\Practical Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Reader.h">
+      <Filter>Header Files\Practical Concepts</Filter>
+    </ClInclude>
+    <ClInclude Include="Parserh.txt">
+      <Filter>Header Files\Practical Concepts</Filter>
+    </ClInclude>
+    <ClInclude Include="Prompt.h">
+      <Filter>Header Files\Practical Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryCommand.h">
+      <Filter>Header Files\Abstract Concepts</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Header Files\Practical Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Date.h">
+      <Filter>Header Files\Practical Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Touch.h">
+      <Filter>Header Files\Practical Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Truncate.h">
+      <Filter>Header Files\Practical Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Remove.h">
+      <Filter>Header Files\Practical Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="CountWC.h">
+      <Filter>Header Files\Practical Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Tr.h">
+      <Filter>Header Files\Practical Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="TernaryCommand.h">
+      <Filter>Header Files\Abstract Concepts</Filter>
+    </ClInclude>
+    <ClInclude Include="Head.h">
+      <Filter>Header Files\Practical Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Batch.h">
+      <Filter>Header Files\Practical Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpreter.h">
+      <Filter>Header Files\Practical Concepts</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Header Files\Practical Concepts</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="input.txt" />
+    <Text Include="batch_input.txt" />
+    <Text Include="staritokenizer.txt" />
+  </ItemGroup>
+</Project>

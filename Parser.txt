@@ -1,0 +1,154 @@
+/*
+
+#include "Parser.h"
+#include "Echo.h"
+#include "Time.h"
+#include "Date.h"
+#include "Touch.h"
+#include "Truncate.h"
+#include "Remove.h"
+#include "CountWC.h"
+#include "Tr.h"
+#include "Head.h"
+#include "Batch.h"
+
+#include "Prompt.h"
+#include "UnaryCommand.h"
+#include "TernaryCommand.h"
+
+Parser::Parser() {}
+
+Parser::Parser(string* readiness_sigil) :
+	readiness_sigil(readiness_sigil) {}
+
+Command* Parser::parseCommand(string line) {
+
+	vector<string> tokens = tokenize(line);
+
+	if (tokens.empty())
+		return nullptr;
+
+	string cmd = tokens[0];
+
+	if (cmd == "time" || cmd == "date") {
+		return parseNoArguments(tokens);
+	}
+
+	if (cmd == "echo" || cmd == "touch" || cmd == "trunc" || cmd == "rm" || cmd == "batch") {
+		return parseUnary(tokens);
+	}
+
+	if (cmd == "wc" || cmd == "head" || cmd == "prompt") {
+		return parseBinary(tokens);
+	}
+
+	if (cmd == "tr")
+	{
+		return parseTernary(tokens);
+	}
+
+	
+}
+
+vector<string> Parser::tokenize(string line) {
+	vector<string> tokens;
+	string current;
+	bool isReadingArgument = 0;
+	bool isReadingOption = 0;
+
+	for (char c : line) {
+		{
+			if (c == '"' && isReadingArgument == 0)
+				isReadingArgument = 1;
+			else if (c == '"' && isReadingArgument == 1)
+				isReadingArgument = 0;
+			else if (isspace(c) && !isReadingArgument) {
+				if (isReadingOption) isReadingOption = 0;
+				if (!current.empty()) {
+					tokens.push_back(current);
+
+					current.clear();
+				}
+			}
+			else if (c == '-') isReadingOption = 1;
+			else {
+				current.push_back(c);
+			}
+
+		} 
+	}
+
+	if (!current.empty()) {
+		tokens.push_back(current);
+	}
+
+	return tokens;
+}
+
+Command* Parser::parseNoArguments(vector<string> tokens) {
+	if (tokens[0] == "time") {
+		return new Time();
+	}
+
+	if (tokens[0] == "date") {
+		return new Date();
+	}
+}
+
+UnaryCommand* Parser::parseUnary(vector<string> tokens) {
+	if (tokens.size() != 2) {
+		//ovo ce biti kad bude postojao exception
+	} 
+
+	if (tokens[0] == "echo") {
+		return new Echo(tokens[1]);
+	}
+
+
+	if (tokens[0] == "touch") {
+		return new Touch(tokens[1]);
+	}
+
+	if (tokens[0] == "trunc") {
+		return new Truncate(tokens[1]);
+	}
+
+	if (tokens[0] == "rm") {
+		return new Remove(tokens[1]);
+	}
+
+	if (tokens[0] == "batch") {
+		return new Batch(tokens[1]);
+	}
+}
+
+BinaryCommand* Parser::parseBinary(vector<string> tokens) {
+	if (tokens.size() != 3) {
+		if (tokens[0] == "prompt") {
+			return new Prompt(tokens[1], readiness_sigil);
+		}
+	}
+
+	if (tokens[0] == "wc") {
+		return new CountWC(tokens[1], tokens[2]);
+	}
+
+	if (tokens[0] == "head") {
+		return new Head(tokens[1], tokens[2]);
+	}
+
+
+}
+
+TernaryCommand* Parser::parseTernary(vector<string> tokens) {
+	if (tokens.size() != 4 && tokens[0] == "tr") {
+		return new Tr(tokens[1], tokens[2]);
+	}
+
+	if (tokens[0] == "tr") {
+		return new Tr(tokens[1], tokens[2], tokens[3]);
+	}
+}
+
+*/
+
