@@ -11,6 +11,7 @@
 #include "Head.h"
 #include "Batch.h"
 #include "Prompt.h"
+#include "Exception.h"
 
 #include<fstream>
 
@@ -40,22 +41,7 @@ vector<vector<Token>> NewParser::getSegments(vector<Token> tokens) {
 	return segments;
 }
 
-void checkStringArgument(vector<Token> segment, IOdata* IOdata) {
 
-}
-
-/*
-vector<Token> setType(IOdata* IOdata, vector<Token> segment, int idx) {
-	if (IOdata->input != "file") {
-		if (segment.size() == idx + 1) {
-			if (segment[idx].inQuotes) IOdata->input = "string", IOdata->inputString = segment[idx].parameter, segment.erase(segment.begin() + idx);
-			else IOdata->input = "file", IOdata->inputFile = segment[idx].parameter, segment.erase(segment.begin() + idx);
-		}
-		else if (segment.size() == idx) IOdata->input = "console";
-		else; //TO-DO error;
-	}
-}
-*/
 
 
 void checkAndSetInput(vector<Token>& segment, IOdata* IOdata, int idx) {
@@ -70,16 +56,32 @@ bool isWhat(Token t) {
 	else return false;
 }
 
-vector<Token> getInputOutput(vector<Token> segment, IOdata* IOdata) {
+/*
+int findIncorrectPosition(string line, vector<Token> segment, int idx) {
+	int starting_position;
+	if(idx!=0) starting_position = line.find(segment[idx].parameter, segment[0].parameter.size()) + segment[idx].parameter.size();
+	else starting_position = line.find(segment[idx].parameter) + segment[idx].parameter.size();
+	if (segment[idx].inQuotes) starting_position++;
+	if (segment.size() == 1) return (starting_position + 1);
+	for (int i = starting_position; i < line.size(); i++) {
+		if (!isspace(line[i])) return i;
+	}
+	
+}
+*/
+
+int findIncorrectPosition(vector<Token> segment, int idx) {
+	if (idx == 0) return segment[idx].end + 1;
+	return segment[idx].start;
+}
+
+vector<Token> getInputOutput(vector<Token> segment, IOdata* IOdata, string line) {
 	//ako su vec dobijeni input/output ne treba ih opet proveravati
 	string cmd = segment[0].parameter;
 
-	if (IOdata->output != "file") IOdata->output = "console";
+	if (IOdata->output != "file") IOdata->output = "console"; 
 
 	if (cmd == "date" || cmd == "time") {
-		if (segment.size() != 1) {
-
-		}//TO-DO error;
 		IOdata->input = "no_input";
 		return segment;
 	} 
@@ -91,18 +93,16 @@ vector<Token> getInputOutput(vector<Token> segment, IOdata* IOdata) {
 				checkAndSetInput(segment, IOdata, 1);
 			}
 			else if (segment.size() == 1) IOdata->input = "console";
-			else; //TO-DO error
 			return segment;
 	}
 
 	if (cmd == "wc" || cmd == "head") {
-			if (segment.size() == 3) {
-				checkAndSetInput(segment, IOdata, 2);
-			}
-			else if (segment.size() == 2) IOdata->input = "console";
-			else; //TO-DO error
+		if (segment.size() == 3) {
+			checkAndSetInput(segment, IOdata, 2);
+		}
+		else if (segment.size() == 2) IOdata->input = "console";
 			return segment;
-	}
+	} 
 	
 	if (cmd == "tr") {
 			if (segment.size() == 4) {
@@ -115,9 +115,8 @@ vector<Token> getInputOutput(vector<Token> segment, IOdata* IOdata) {
 			else if (segment.size() == 2) {
 				if (isWhat(segment[1])) IOdata->input = "console";
 			}
-			else {
 				//TO-DO error;
-			}
+			
 			return segment;
 	}
 
@@ -246,7 +245,7 @@ Pipe NewParser::parseCommands(string line) {
 
 			if (i == 0) {
 				segments[i] = getRedirect(segments[i], &IOdata);
-				segments[i] = getInputOutput(segments[i], &IOdata);
+				segments[i] = getInputOutput(segments[i], &IOdata, line);
 			}
 			else if (0 < i && i < segments.size() - 1) {
 
@@ -270,17 +269,17 @@ Pipe NewParser::parseCommands(string line) {
 			}
 
 			if (cmd == "time" || cmd == "date" || cmd == "echo") {
-				curr_cmd = parseZero(segments[i]);
+				curr_cmd = parseZero(segments[i], line);
 			}
 			else if (cmd == "touch" || cmd == "truncate" || cmd == "rm" || cmd == "batch" || cmd == "prompt") {
-				curr_cmd = parseUnary(segments[i]);
+				curr_cmd = parseUnary(segments[i], line);
 			}
 			else if (cmd == "wc" || cmd == "head") {
-				curr_cmd = parseBinary(segments[i]);
+				curr_cmd = parseBinary(segments[i], line);
 			}
 			else if (cmd == "tr") {
-				if (segments[i].size() == 3) curr_cmd = parseTernary(segments[i]);
-				else if (segments[i].size() == 2) curr_cmd = parseBinary(segments[i]);
+				if (segments[i].size() == 3) curr_cmd = parseTernary(segments[i], line);
+				else if (segments[i].size() == 2) curr_cmd = parseBinary(segments[i], line);
 			}
 
 			if (curr_cmd != nullptr) {
@@ -306,96 +305,106 @@ vector<Token> NewParser::tokenize(string line) {
 	current.inQuotes = 0;
 	bool isReadingArgument = 0;
 
+
 	for (int i = 0; i < line.length(); i++) {
 		char c = line[i];
 
-		//Izlazak iz navodnika
+			//Izlazak iz navodnika
 
-		if (isReadingArgument && c == '\n') {
-			tokens.clear();
-			return tokens;
-		}; //TO-DO greska, nezatvoren navodnik
-		if (isReadingArgument && c != '"') {
-			current.parameter.push_back(c);
-			continue;
-		}
-		if (isReadingArgument && c == '"') {
-			tokens.push_back(current);
-			isReadingArgument = 0;
-			current.inQuotes = 0;
-			current.parameter.clear();
-			continue;
-		}
-
-		if (!isReadingArgument) {
-			//Ulazak u navodnike
-			if (c == '"') {
-				isReadingArgument = 1;
-				current.inQuotes = 1;
-				continue;
-			}
-
-			//rad sa specijalnim karakterima
-			if (c == '|' || c == '<') {
-				if (!current.parameter.empty()) {
-					tokens.push_back(current);
-				}
-				current.parameter.clear();
+			if (isReadingArgument && i == line.length() - 1 && c != '"') {
+				throw new SyntaxException(i, line);
+				cout << "greska nema navodnika na kraju \n";
+				tokens.clear();
+				return tokens;
+			}; //TO-DO greska, nezatvoren navodnik
+			if (isReadingArgument && c != '"') {
 				current.parameter.push_back(c);
+				continue;
+			}
+			if (isReadingArgument && c == '"') {
+				current.end = i;
 				tokens.push_back(current);
+				isReadingArgument = 0;
+				current.inQuotes = 0;
 				current.parameter.clear();
 				continue;
 			}
 
-			//specijalna provera za karakter >, zbog mogucnosti >>
-			if (c == '>') {
-				if (!current.parameter.empty()) {
-					tokens.push_back(current);
+			if (!isReadingArgument) {
+				//Ulazak u navodnike
+				if (c == '"') {
+					isReadingArgument = 1;
+					current.inQuotes = 1;
+					current.start = i;
+					continue;
 				}
-				current.parameter.clear();
-				if (i + 1 < line.length()) {
-					char next_c = line[i + 1];
-					if (next_c == '>') {
-						i++;
-						current.parameter.push_back(c);
-						current.parameter.push_back(next_c);
+
+				//rad sa specijalnim karakterima
+				if (c == '|' || c == '<') {
+					if (!current.parameter.empty()) {
+						tokens.push_back(current);
+					}
+					current.parameter.clear();
+					current.parameter.push_back(c);
+					current.end = i;
+					tokens.push_back(current);
+					current.parameter.clear();
+					continue;
+				}
+
+				//specijalna provera za karakter >, zbog mogucnosti >>
+				if (c == '>') {
+					if (!current.parameter.empty()) {
+						tokens.push_back(current);
+					}
+					current.parameter.clear();
+					if (i + 1 < line.length()) {
+						char next_c = line[i + 1];
+						if (next_c == '>') {
+							i++;
+							current.parameter.push_back(c);
+							current.parameter.push_back(next_c);
+						}
+						else {
+							current.parameter.push_back(c);
+						}
 					}
 					else {
 						current.parameter.push_back(c);
 					}
-				}
-				else {
-					current.parameter.push_back(c);
-				}
-				tokens.push_back(current);
-				current.parameter.clear();
-				continue;
-			}
-
-
-			if (isspace(c)) {
-				if (!current.parameter.empty()) {
+					current.end = i;
 					tokens.push_back(current);
 					current.parameter.clear();
+					continue;
 				}
-				continue;
-			}
-			current.parameter.push_back(c);
-		}
 
+
+				if (isspace(c)) {
+					if (!current.parameter.empty()) {
+						current.end = i - 1;
+						tokens.push_back(current);
+						current.parameter.clear();
+					}
+					continue;
+				}
+				if (current.parameter.empty()) current.start = i;
+				current.parameter.push_back(c);
+			}
+		
 	}
 	//slucaj kada nema beline na kraju linije
-	if (!current.parameter.empty()) tokens.push_back(current);
+	if (!current.parameter.empty()) current.end = line.length() -1 , tokens.push_back(current);
 
 	return tokens;
 
 }
 
-Command* NewParser::parseZero(vector<Token> segment) {
+Command* NewParser::parseZero(vector<Token> segment, string line) {
 
 	string cmd = segment[0].parameter;
 	if (segment.size() != 1) {
-		//TO-DO napraviti exception
+		if (segment.size() == 2) throw new SyntaxException(findIncorrectPosition(segment, 1), line);
+		throw new SyntaxException(findIncorrectPosition(segment, 2), line);
 		return nullptr;
 	}
 	else {
@@ -415,11 +424,14 @@ Command* NewParser::parseZero(vector<Token> segment) {
 	}
 }
 
-Command* NewParser::parseUnary(vector<Token> segment) {
+Command* NewParser::parseUnary(vector<Token> segment, string line) {
 
 	string cmd = segment[0].parameter;
 
-	if (segment.size() != 2) return nullptr;
+	if (segment.size() != 2) {
+		if (segment.size() == 1) throw new SyntaxException(findIncorrectPosition(segment, 0), line);
+		else throw new SyntaxException(findIncorrectPosition(segment, 2), line);
+	}
 
 	//argument prompta mora biti u navodnicima
 	if (segment[1].inQuotes) {
@@ -438,12 +450,12 @@ Command* NewParser::parseUnary(vector<Token> segment) {
 	}
 }
 
-Command* NewParser::parseBinary(vector<Token> segment) {
+Command* NewParser::parseBinary(vector<Token> segment, string line) {
 
 	string cmd = segment[0].parameter;
 	if (segment.size() != 2) {
-		//TO-DO napraviti exception
-		return nullptr;
+		if (segment.size() == 1) throw new SyntaxException(findIncorrectPosition(segment, 0), line);
+		else throw new SyntaxException(findIncorrectPosition(segment, 2), line);
 	}
 	else {
 		if (cmd == "wc") {
@@ -502,10 +514,13 @@ Command* NewParser::parseBinary(vector<Token> segment) {
 
 }
 
-Command* NewParser::parseTernary(vector<Token> segment) {
+Command* NewParser::parseTernary(vector<Token> segment, string line) {
 
 	string cmd = segment[0].parameter;
 	if (segment.size() != 3) {
+		if (segment.size() == 2) throw new SyntaxException(findIncorrectPosition(segment, 1), line);
+		else if (segment.size() == 1) throw new SyntaxException(findIncorrectPosition(segment, 0), line);
+		else throw new SyntaxException(findIncorrectPosition(segment, 3), line);
 		//TO-DO napraviti exception
 		return nullptr;
 	}
